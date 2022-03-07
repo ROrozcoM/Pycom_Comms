@@ -20,12 +20,33 @@ Go on your browser and paste ```localhost:8086``` on the adress bar. Here you ca
 ## 2. Install Node-RED
 It is necessary to install ```Node.js```  to install Node-RED. You can follow the steps from this link: https://nodered.org/docs/getting-started/windows
 
-## 3. Get MQTT API Keys from TheThingNetwork Applications
+## 3. Register your devices on TheThingsNetwork(TTN)
+It will be necessary to specify 3 key parameters:
+- Your device DevEUI
+- Your device AppEUI
+- Generate your AppKey
+
+Each device has its own DevEUI and AppEUI. In case you don't know them, for example, if you are using a pybyte device, you can print it to the screen with the following piece of code: 
+```
+import network
+from network import LoRa
+import binascii
+binascii.hexlify(network.LoRa().mac())
+
+>>>b'70b3d580674678de'
+
+```
+Generate AppKey by yourself if you are using more than one device, and specify it in config file
+
+<img width="355" alt="RegisterDevice_TTN" src="https://user-images.githubusercontent.com/88738496/156998938-add4adb8-45a4-4828-92f4-12517e56dd3f.PNG">
+
+
+## 4. Get MQTT API Keys from TheThingNetwork Applications
 Go on TheThingsNetwork and open your device application. You will find ```MQTT``` on "Integrations" where the MQTT credentials are stored. The Application Server exposes an MQTT server to work with streaming events. In order to use the MQTT server you need to create a new API key, which will function as connection password. You can also use an existing API key, as long as it has the necessary rights granted. 
 
 <center><img width="422" alt="MQTT_ApiKeys" src="https://user-images.githubusercontent.com/88738496/154685019-9d16ec05-b75d-4353-904f-59bc1b930464.PNG">
 
-## 4. Run Node-RED and install necessary modules
+## 5. Run Node-RED and install necessary modules
 Open another terminal and write the following command: ```node-red```. Node-RED will start running now. If you are using a browser on the same computer that is running Node-RED, you can access it with the url: http://localhost:1880. The interface should be something like this:
 
 <img width="800" alt="Node-RED" src="https://user-images.githubusercontent.com/88738496/154686497-d070ddd1-36c6-48f2-8f12-29dd30b406fe.PNG">
@@ -36,7 +57,7 @@ For connecting influxdb with Node-RED it will be necessary to install ```node-re
 
   https://nodered.org/docs/tutorials/
 
-## 5. Connect The thins network with Node-RED by MQTT:
+## 6. Connect The thins network with Node-RED by MQTT:
   
 On Node-RED  -  network, pull a ```mqtt in``` node into your flow. It will connect to a MQTT broker and publishes messages. Double click on it:
 Click on "Use TLS" and press pencil button. 
@@ -51,10 +72,12 @@ Now it's time to configure your API user and Key:
   
 On the Upper-Right side of the page, click on "Deploy". Your mqtt node should be connected now.
   
-## 6. Create an Influxdb field on Node-RED
+## 7. Create an Influxdb field on Node-RED
 On Node-RED  -  storage, pull an ```influxdb out``` node into your flow. Connect it to your ```mqqt in```.
 Define here your influxdb credentials created before:
   1. Server: URL(http://localhost:8086) and your Token
   2. Organisation name and Bucket
+  
+ It will be also necessary to create a function for decoding mqtt messages and give them to influxdb
   
   
